@@ -1,0 +1,63 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int main() {
+    int n, amount;
+
+    // Number of coin types
+    cout << "Enter number of coins: ";
+    cin >> n;
+
+    vector<int> coins(n);
+
+    // Enter coin values
+    cout << "Enter coin values: ";
+    for (int i = 0; i < n; i++) {
+        cin >> coins[i];
+    }
+
+    // Enter amount
+    cout << "Enter amount: ";
+    cin >> amount;
+
+    // DP array
+    vector<int> dp(amount + 1, amount + 1);
+
+    // Base case
+    dp[0] = 0;
+
+    // Dynamic Programming
+    for (int i = 1; i <= amount; i++) {
+
+        for (int coin : coins) {
+
+            if (coin <= i) {
+                dp[i] = min(dp[i], dp[i - coin] + 1);
+            }
+        }
+    }
+
+    // Check if amount is possible
+    if (dp[amount] == amount + 1) {
+        cout << "Amount cannot be formed using given coins.";
+    }
+    else {
+        cout << "Minimum number of coins = " << dp[amount];
+    }
+
+    return 0;
+}
+
+OUTPUT
+Enter number of coins: 4
+Enter coin values: 1
+5
+7
+9
+Enter amount: 15
+Minimum number of coins = 3
+
+=== Code Execution Successful ===
