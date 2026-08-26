@@ -1,0 +1,70 @@
+#include <iostream>
+using namespace std;
+
+int main() {
+    int n, capacity;
+
+    cout << "Enter number of items: ";
+    cin >> n;
+
+    int weight[100], value[100];
+
+    cout << "Enter weights: ";
+    for (int i = 0; i < n; i++) {
+        cin >> weight[i];
+    }
+
+    cout << "Enter values: ";
+    for (int i = 0; i < n; i++) {
+        cin >> value[i];
+    }
+
+    cout << "Enter knapsack capacity: ";
+    cin >> capacity;
+
+    // dp[i][w] = maximum value using first i items
+    int dp[101][101] = {0};
+
+    // Calculate maximum value
+    for (int i = 1; i <= n; i++) {
+        for (int w = 0; w <= capacity; w++) {
+
+            if (weight[i - 1] <= w) {
+                dp[i][w] = max(
+                    dp[i - 1][w],
+                    value[i - 1] + dp[i - 1][w - weight[i - 1]]
+                );
+            }
+            else {
+                dp[i][w] = dp[i - 1][w];
+            }
+        }
+    }
+
+    cout << "\nMaximum value = " << dp[n][capacity] << endl;
+
+    // Find whether each item is selected: 0 or 1
+    int selected[100] = {0};
+
+    int w = capacity;
+
+    for (int i = n; i >= 1; i--) {
+
+        // If value changed, item was selected
+        if (dp[i][w] != dp[i - 1][w]) {
+            selected[i - 1] = 1;
+            w = w - weight[i - 1];
+        }
+        else {
+            selected[i - 1] = 0;
+        }
+    }
+
+    cout << "\nSelected items (0 = Not selected, 1 = Selected):\n";
+
+    for (int i = 0; i < n; i++) {
+        cout << "Item " << i + 1 << " = " << selected[i] << endl;
+    }
+
+    return 0;
+}
